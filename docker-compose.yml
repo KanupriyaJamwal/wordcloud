@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    restart: always
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    restart: always
+
+  redis:
+    image: redis:6
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  worker:
+    build: .
+    command: celery -A app.tasks.worker.celery worker --loglevel=info
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    restart: always
+
+volumes:
+  postgres_data:
+  redis_data:
