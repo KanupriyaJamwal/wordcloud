@@ -4,7 +4,7 @@ flask-migrate==4.0.4
 psycopg2-binary==2.9.5
 spotipy==2.22.1
 lyricsgenius==3.0.1
-wordcloud==1.8.2
+wordcloud==1.8.2.2
 matplotlib==3.7.1
 celery==5.2.7
 redis==4.5.4
